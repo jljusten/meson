@@ -14,11 +14,7 @@ c_lib = static_library('clib', 'src/source.c', include_directories : inc)
 
 rust = import('unstable-rust')
 
-gen = rust.bindgen(
-  input : 'src/header.h',
-  output : 'header.rs',
-  include_directories : inc,
-)
+subdir('src')
 
 # see: https://github.com/mesonbuild/meson/issues/8160
 f = configure_file(
@@ -29,8 +25,8 @@ f = configure_file(
 
 rust_bin = executable(
   'rust_bin',
-  [f, gen],
-  link_with : c_lib,
+  [f],
+  link_with : [c_lib, rust_rlib],
 )
 
 test('main', rust_bin)
